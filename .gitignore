@@ -1,0 +1,15 @@
+*.iso
+NUL
+/worktrees/
+*:Zone.Identifier
+*.org~
+*.org#
+*.el~
+*.el#
+*#*
+**/straight/
+**/elpa/
+**/.cache/
+**/agenda/
+**/auto-save-list/
+**/eln-cache/
