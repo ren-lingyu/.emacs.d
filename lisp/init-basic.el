@@ -37,9 +37,10 @@
 
 (setq straight-use-package-by-default t)
 (setq package-enable-at-startup nil) ; 禁用package.el
-(setq straight-vc-git-default-protocol 'ssh) ; 使用SSH
 (setq straight-vc-git-default-clone-depth 1) ; 使用浅克隆
-
+(setq straight-vc-git-default-protocol 'https)
+(setq straight-host-usernames '((github . "git")))
+(setq native-comp-async-report-warnings-errors nil)
 
 ;; 基础编码和启动界面设置, 基本外观设置
 (setq inhibit-startup-message t) ;; 关闭启动界面
