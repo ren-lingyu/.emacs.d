@@ -90,10 +90,6 @@
 (setq backup-directory-alist `((".*" . ,(locate-user-emacs-file "cache/backups/"))))
 (setq auto-save-file-name-transforms `((".*" ,(locate-user-emacs-file "cache/auto-save/") t)) create-lockfiles nil)
 
-;; Ensure cache directories exist
-(make-directory (expand-file-name "./.cache/backups/" user-emacs-directory) t)
-(make-directory (expand-file-name "./.cache/auto-save/" user-emacs-directory) t)
-
 (add-hook 'prog-mode-hook #'hs-minor-mode)    ; 编程模式折叠代码块
 ;; (savehist-mode 1)                           ; 保存历史记录
 

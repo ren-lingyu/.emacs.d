@@ -22,7 +22,7 @@
     )
   )
   :config
-  (setq TeX-auto-local (expand-file-name "./.cache/auctex-auto/" user-emacs-directory))
+  (setq TeX-auto-local (locate-user-emacs-file "cache/auctex-auto/"))
   (unless 
     (file-exists-p TeX-auto-local)
     (make-directory TeX-auto-local t)
