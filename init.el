@@ -21,6 +21,8 @@
 ;; main settings
 (require 'init-basic) ; 基本设置
 
+(require 'init-help) ; 帮助信息优化
+
 (require 'init-theme) ; 主题
 
 (require 'init-org) ; Org设置

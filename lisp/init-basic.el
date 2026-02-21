@@ -123,15 +123,7 @@
   :config 
   (powerline-default-theme))
 
-;; 帮助信息优化
-(use-package helpful
-  :straight (:host github :repo "Wilfred/helpful")
-  :bind
-  (("C-h f" . helpful-callable)
-   ("C-h v" . helpful-variable)
-   ("C-h k" . helpful-key)
-   ("C-h s" . helpful-symbol)))
-
+;; 快捷键提示
 (use-package which-key
   :hook (after-init . which-key-mode)
   :custom
@@ -191,7 +183,10 @@
 
 (use-package counsel)
 
+(use-package ripgrep)
+
 (use-package consult
+  :after ripgrep
   :bind
   (("C-s" . consult-line)               ;; 替代 swiper
    ("C-x b" . consult-buffer)           ;; 替代 ivy-switch-buffer
@@ -204,18 +199,11 @@
    ("C-c g" . consult-grep)
    ("C-c G" . consult-ripgrep)))
 
-(use-package ripgrep
-  :after consult
-  :bind
-  (("C-s" . consult-ripgrep)))
-
 ;; Embark：上下文操作
 (use-package embark
   :bind
-  (
-   ("C-." . embark-act)
-   ("C-;" . embark-dwim)
-   )
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim))
   :init
   (setq embark-prompter 'embark-completing-read-prompter))
 
@@ -232,6 +220,7 @@
   :bind 
   (("C-x o" . 'ace-window)))
 
+;; undo
 (use-package undo-tree
   :straight (:host gitlab :repo "tsc25/undo-tree")
   :init (global-undo-tree-mode)
@@ -241,6 +230,7 @@
 (use-package vundo
   :straight (:host github :repo "casouri/vundo"))
 
+;; avy
 (use-package avy
   :bind
   (("C-c C-SPC" . avy-goto-char-timer)))
