@@ -9,7 +9,10 @@ NUL
 *#*
 **/straight/
 **/elpa/
-**/.cache/
+**/cache/
 **/agenda/
 **/auto-save-list/
 **/eln-cache/
+**/custom/
+**/eshell/
+**/tmp/

@@ -55,11 +55,14 @@
   (set-face-background 'default "black")
   (set-face-foreground 'default "white"))     ; 终端背景/前景色
 
-(add-to-list 'initial-frame-alist '(fullscreen . fullboth)) 
+(setq initial-frame-alist
+      '((fullscreen . fullboth)
+	(top . 10)
+	(left . 10)))
 (setq default-frame-alist
       '((fullscreen . fullboth)
-	(top . 100)
-	(left . 100)))
+	(top . 10)
+	(left . 10)))
 
 (menu-bar-mode -1)                            ; 关闭菜单栏
 (tool-bar-mode -1)
@@ -84,13 +87,12 @@
       create-lockfiles nil)                     ; 锁文件 .#<filename>
 
 ;; Backup and auto-save configuration
-(setq backup-directory-alist `((".*" . ,(expand-file-name "./.cache/backups/" user-emacs-directory))))
-(setq auto-save-file-name-transforms `((".*" ,(expand-file-name "./.cache/auto-save/" user-emacs-directory) t)) create-lockfiles nil)
+(setq backup-directory-alist `((".*" . ,(locate-user-emacs-file "cache/backups/"))))
+(setq auto-save-file-name-transforms `((".*" ,(locate-user-emacs-file "cache/auto-save/") t)) create-lockfiles nil)
 
 ;; Ensure cache directories exist
 (make-directory (expand-file-name "./.cache/backups/" user-emacs-directory) t)
 (make-directory (expand-file-name "./.cache/auto-save/" user-emacs-directory) t)
-
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)    ; 编程模式折叠代码块
 ;; (savehist-mode 1)                           ; 保存历史记录
@@ -121,14 +123,47 @@
   :config 
   (powerline-default-theme))
 
+;; 帮助信息优化
+(use-package helpful
+  :straight (:host github :repo "Wilfred/helpful")
+  :bind
+  (("C-h f" . helpful-callable)
+   ("C-h v" . helpful-variable)
+   ("C-h k" . helpful-key)
+   ("C-h s" . helpful-symbol)))
+
+(use-package which-key
+  :hook (after-init . which-key-mode)
+  :custom
+  (which-key-idle-delay 0.7))
+
+;; 历史记录
+(use-package savehist
+  :hook (after-init . savehist-mode)
+  :custom
+  ;; 设置保存文件的位置
+  (savehist-file (locate-user-emacs-file "cache/savehist"))
+  ;; 额外保存剪切板和shell命令行历史
+  (savehist-additional-variables '(kill-rings shell-command-history))
+  ;; 不保存消息历史
+  (savehist-ignored-variables '(message-history))
+  ;; 自动去重
+  (history-delete-duplicates t)
+  ;; 保存历史数据条目
+  (history-length 1000))
+
+(use-package recentf
+  :hook (after-init . recentf-mode)
+  :custom
+  (recentf-max-menu-item 10)
+  (recentf-save-file (locate-user-emacs-file "cache/recentf")))
+
 ;; 语法高亮增强
 (use-package rainbow-delimiters
   :hook 
   (prog-mode . rainbow-delimiters-mode))
 
-(use-package counsel)
-
-;; Vertico 主体
+;; 搜索功能增强
 (use-package vertico
   :init
   (vertico-mode)
@@ -136,13 +171,6 @@
     (define-key vertico-map "\DEL" #'vertico-directory-delete-char)
     (define-key vertico-map "\C-d" #'vertico-directory-delete-word)))
 
-;; Marginalia：补全项注释(如文件大小、函数文档等)
-(use-package marginalia
-  :init
-  (marginalia-mode)
-  )
-
-;; Orderless：模糊匹配增强
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
@@ -157,7 +185,12 @@
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t))
 
-;; Consult：替代 Counsel 的功能
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
+(use-package counsel)
+
 (use-package consult
   :bind
   (("C-s" . consult-line)               ;; 替代 swiper
@@ -170,6 +203,11 @@
    ("C-c i" . consult-imenu)
    ("C-c g" . consult-grep)
    ("C-c G" . consult-ripgrep)))
+
+(use-package ripgrep
+  :after consult
+  :bind
+  (("C-s" . consult-ripgrep)))
 
 ;; Embark：上下文操作
 (use-package embark
@@ -212,9 +250,16 @@
   :bind 
   ("<f8>" . neotree-toggle))
 
-;; 各种语言的简单支持
+;; 各种语言和文件格式的简单支持
 (use-package markdown-mode)
 (use-package yaml-mode)
+(use-package dockerfile-mode
+  :straight (:host github :repo "spotify/dockerfile-mode")
+  :mode ("Dockerfile\\'" . dockerfile-mode)
+  :config (put 'dockerfile-image-name 'safe-local-variable #'stringp))
+(use-package dotenv-mode
+  :straight (:host github :repo "preetpalS/emacs-dotenv-mode")
+  :mode ("\\.env\\..*\\'" . dotenv-mode))
 
 ;; 快捷键
 
