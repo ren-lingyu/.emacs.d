@@ -238,11 +238,18 @@
 
 ;; 各种语言和文件格式的简单支持
 (use-package markdown-mode)
+
 (use-package yaml-mode)
+
+(use-package nix-mode
+  :straight (:host github :repo "NixOS/nix-mode")
+  :mode "\\.nix\\'")
+
 (use-package dockerfile-mode
   :straight (:host github :repo "spotify/dockerfile-mode")
   :mode ("Dockerfile\\'" . dockerfile-mode)
   :config (put 'dockerfile-image-name 'safe-local-variable #'stringp))
+
 (use-package dotenv-mode
   :straight (:host github :repo "preetpalS/emacs-dotenv-mode")
   :mode ("\\.env\\..*\\'" . dotenv-mode))
