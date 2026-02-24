@@ -1,12 +1,10 @@
 *.iso
 NUL
-/worktrees/
 *:Zone.Identifier
-*.org~
-*.org#
-*.el~
-*.el#
+*~
+*#
 *#*
+*.elc
 **/straight/
 **/elpa/
 **/cache/
@@ -16,3 +14,4 @@ NUL
 **/custom/
 **/eshell/
 **/tmp/
+**/pyim

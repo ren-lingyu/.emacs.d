@@ -40,7 +40,7 @@
 (setq straight-vc-git-default-clone-depth 1) ; 使用浅克隆
 (setq straight-vc-git-default-protocol 'https)
 (setq straight-host-usernames '((github . "git")))
-(setq native-comp-async-report-warnings-errors nil)
+(setq native-comp-async-report-warnings-errors 'silent)
 
 ;; 基础编码和启动界面设置, 基本外观设置
 (setq inhibit-startup-message t) ;; 关闭启动界面
@@ -236,7 +236,34 @@
   :bind 
   ("<f8>" . neotree-toggle))
 
+;; 输入法
+(use-package pyim
+  :straight (:host github :repo "tumashu/pyim")
+  :commands (pyim-mode toggle-input-method)
+  :config
+  (setq default-input-method "pyim")
+  (setq pyim-page-length 9)
+  (setq pyim-default-scheme 'cangjie)
+  (setq pyim-assistant-scheme 'quanpin)
+  (setq-default pyim-punctuation-translate-p '(no)))
+
+(use-package pyim-basedict
+  :straight (:host github :repo "tumashu/pyim-basedict")
+  :config
+  (pyim-basedict-enable))
+
+(use-package pyim-cangjiedict
+  :straight (:host github :repo "cor5corpii/pyim-cangjiedict")
+  :config
+  (pyim-cangjie6dict-enable))
+
 ;; 各种语言和文件格式的简单支持
+(setopt elisp-fontify-semantically t)
+
+(use-package lisp-semantic-hl
+  :ensure t
+  :hook ((emacs-lisp-mode lisp-mode) . lisp-semantic-hl-mode))
+
 (use-package markdown-mode)
 
 (use-package yaml-mode)

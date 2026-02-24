@@ -2,9 +2,9 @@
 ;;; commentary:
 ;;; code:
 
-(defvar orgraph-directory (expand-file-name "~/org/"))
+(defconst orgraph-directory (expand-file-name "~/org/"))
 
-(defvar my/org-roam-directory (expand-file-name "./roam/" orgraph-directory))
+(defconst my/org-roam-directory (expand-file-name "./roam/" orgraph-directory))
 
 (let*
   (

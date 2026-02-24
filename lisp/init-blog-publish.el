@@ -9,13 +9,13 @@
 
 (use-package citeproc)
 
-(defvar my/org-blog-directory orgraph-directory)
-(defvar blog/beginning-year 2026)
-;; (defvar org-blog-org-blog-url "https://aren-coco.com/")
-;; (defvar org-blog-org-blog-url "http://localhost:8081/")
+(defconst my/org-blog-directory orgraph-directory)
+(defconst blog/beginning-year 2026)
+;; (defconst org-blog-org-blog-url "https://aren-coco.com/")
+;; (defconst org-blog-org-blog-url "http://localhost:8081/")
 
 ;; license strings
-(defvar cc-license-generic-work-full-tool-name
+(defconst cc-license-generic-work-full-tool-name
   (concat 
     "This work is licensed under" "\u0020"
     "<a rel=\"license\" href=\"https://creativecommons.org/licenses/by-nc-sa/4.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International</a>"
@@ -26,7 +26,7 @@
   )
 )
 
-(defvar cc-license-no-geniric-work-full-tool-name
+(defconst cc-license-no-geniric-work-full-tool-name
   (concat 
     ;; "<a href=\"https://aren-coco.com/\">Untitled</a>"
     "&copy;" 
@@ -44,7 +44,7 @@
   )
 )
 
-(defvar cc-license-no-genic-work-no-full-tool-name
+(defconst cc-license-no-genic-work-no-full-tool-name
   (concat
     ;; "<a href=\"https://aren-coco.com/\">Untitled</a>"
     "&copy;" 
@@ -63,10 +63,10 @@
 )
 
 ;; Blog configuration
-(defvar org-blog-sitemap-title "Post")
-(defvar org-blog-theindex-title "Index")
-(defvar org-blog-sitemap-abstract "The map of blog posting, sorted by DATE and categorized by FILESTAGS. ")
-(defvar org-blog-theindex-abstract "The website index, sorted by the first letter of the title. ")
+(defconst org-blog-sitemap-title "Post")
+(defconst org-blog-theindex-title "Index")
+(defconst org-blog-sitemap-abstract "The map of blog posting, sorted by DATE and categorized by FILESTAGS. ")
+(defconst org-blog-theindex-abstract "The website index, sorted by the first letter of the title. ")
 
 (setq org-html-head 
   (concat 
