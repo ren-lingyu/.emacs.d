@@ -1,17 +1,14 @@
-*.iso
-NUL
-*:Zone.Identifier
-*~
-*#
-*#*
-*.elc
-**/straight/
-**/elpa/
-**/cache/
-**/agenda/
-**/auto-save-list/
-**/eln-cache/
-**/custom/
-**/eshell/
-**/tmp/
-**/pyim
+# 全局忽略
+*
+*/
+
+# 根目录文件白名单
+!.gitignore
+!README.org
+!LICENSE
+!init.el
+!custom.el
+
+# 子目录文件白名单
+!lisp/
+!lisp/**/*.el
