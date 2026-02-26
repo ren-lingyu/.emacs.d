@@ -2,39 +2,23 @@
 ;;; commentary:
 ;;; code:
 
-;; =============================
-;; 变量定义
-;; =============================
-
-;; (defcustom my/org-roam-directory
-;;   nil
-;;   "Path to the org-roam directory. "
-;;   :group 'my
-;;   :type 'directory
-;; )
-
-;; =============================
-;; org-roam 配置
-;; =============================
-
 ;; org-roam
 (use-package org-roam
   :defer
   ;; :demand t
   :after (org)
   :custom
-  (org-roam-directory my/org-roam-directory)   ;; 你的笔记根目录
-  (org-roam-db-location (expand-file-name ".org-roam.db" my/org-roam-directory))  
+  (org-roam-directory (expand-file-name "./roam/" org-directory))   ;; 你的笔记根目录
+  (org-roam-db-location (expand-file-name "./roam/.org-roam.db" org-directory)) ;; 数据库文件位置
   (org-roam-dailies-directory "journal/")
   (org-roam-completion-everywhere t)
   (org-roam-node-display-template "${title} ${tags}")
   (org-roam-db-update-method 'immediate) 
   :bind 
-  ( ("C-c n f" . org-roam-node-find)     ;; 查找/新建节点
-    ("C-c n i" . org-roam-node-insert)   ;; 插入链接
-    ("C-c n l" . org-roam-buffer-toggle) ;; 打开反向链接侧栏
-    ("C-c n c" . org-roam-capture)      ;; 捕获新笔记
-  )
+  (("C-c n f" . org-roam-node-find)
+    ("C-c n i" . org-roam-node-insert)
+    ("C-c n l" . org-roam-buffer-toggle)
+    ("C-c n c" . org-roam-capture))
   :config
   (org-roam-db-autosync-mode)
   ;; (advice-add 'org-roam-mode-hook :after
@@ -46,9 +30,7 @@
   (setq org-roam-node-display-template
     (concat 
       "${title:*} "
-      (propertize "${tags:30}" 'face 'org-tag)
-    )
-  )
+      (propertize "${tags:30}" 'face 'org-tag)))
   (setq org-roam-capture-templates
     (append org-roam-capture-templates
       `(
@@ -62,10 +44,8 @@
               "#+DATE: " (format-time-string "%Y-%m-%d %A %H:%M:%S %z") "\n"
               "#+FILETAGS: :idea:\n"
               "#+DESCRIPTION:\n"
-            )
-          )
-          :unnarrowed t
-        )
+            ))
+          :unnarrowed t)
         ("p" "permanent" plain "%?"
           :if-new 
           (file+head  
@@ -76,10 +56,8 @@
               "#+DATE: " (format-time-string "%Y-%m-%d %A %H:%M:%S %z") "\n"
               "#+FILETAGS: :zettel:\n"
               "#+DESCRIPTION:\n"
-            )
-          )
-          :unnarrowed t
-        )
+            ))
+          :unnarrowed t)
         ("I" "post index" plain "%?"
           :if-new 
           (file+head  
@@ -92,10 +70,8 @@
               "#+EMAIL: aRen_Coco@outlook.com\n"
               "#+DATE: " (format-time-string "<%Y-%m-%d %a %z>") "\n"
               "#+FILETAGS: :zettel:post:\n"
-            )
-          )
-          :unnarrowed t
-        )
+            ))
+          :unnarrowed t)
         ("P" "post article" plain "%?"
           :if-new 
           (file+head  
@@ -107,10 +83,8 @@
               "#+EMAIL: aRen_Coco@outlook.com\n"
               "#+DATE: " (format-time-string "<%Y-%m-%d %a %z>") "\n"
               "#+FILETAGS: :zettel:post:\n"
-            )
-          )
-          :unnarrowed t
-        )
+            ))
+          :unnarrowed t)
         ("D" "draft article" plain "%?"
           :if-new 
           (file+head  
@@ -122,14 +96,42 @@
               "#+EMAIL: aRen_Coco@outlook.com\n"
               "#+DATE: " (format-time-string "<%Y-%m-%d %a %z>") "\n"
               "#+FILETAGS: :draft:\n"
-            )
-          )
-          :unnarrowed t
-        )
-      )
-    )
-  )
-)
+            ))
+          :unnarrowed t)))))
+
+(use-package org-roam-organize
+  :straight (:host github :repo "ren-lingyu/org-roam-organize")
+  :after org-roam
+  :custom
+  (org-roam-organize/directory org-roam-directory)
+  (org-roam-organize/moc-directory (expand-file-name "./moc/" org-roam-directory))
+  (org-roam-organize/fleeting-directory (expand-file-name "./fleeting/" org-roam-directory))
+  (org-roam-organize/permanent-directory (expand-file-name "./permanent/" org-roam-directory))
+  (org-roam-organize/move-target-directory (expand-file-name "./permanent/" org-roam-directory))
+  (org-roam-organize/directory-p t)
+  (org-roam-organize/move-source-tag "idea")
+  (org-roam-organize/move-target-tag "zettel")
+  (org-roam-organize/top-moc-file (expand-file-name "./moc/maps.org" org-roam-directory))
+  (org-roam-organize/move-target-moc-file (expand-file-name "./moc/permanent.org" org-roam-directory))
+  (org-roam-organize/capture-templates `(("m" "map of contents" plain "%?"
+                                          :if-new 
+                                          (file+head  
+                                            "moc/${slug}.org"
+                                            ,(concat
+                                              "#+TITLE: ${title}\n"
+                                              "#+AUTHOR: Lingyu Ren\n"
+                                              "#+DATE: " (format-time-string "<%Y-%m-%d %A %H:%M:%S %z>") "\n"
+                                              "#+FILETAGS: :map:\n"
+                                              "#+DESCRIPTION:\n"))
+                                        :unnarrowed t)))
+  (org-roam-organize/move-target-directory-id-or-not t)
+  (org-roam-organize/move-target-filename-id-or-not nil)
+  :config
+  (org-roam-organize-create-directory)
+  :bind 
+  (("C-c o o" . org-roam-organize-mode)
+   ("C-c o c" . org-roam-organize-check-variables))
+  :hook (after-init-hook . org-roam-organize-mode))
 
 (global-set-key (kbd "C-c h d") (lambda () (interactive) (insert (concat "\n* " (format-time-string "%Y-%m-%d %A %z") "\n"))))
 
@@ -169,8 +171,7 @@
   ("C-c c b" . consult-org-roam-backlinks)
   ("C-c c B" . consult-org-roam-backlinks-recursive)
   ("C-c c l" . consult-org-roam-forward-links)
-  ("C-c c s" . consult-org-roam-search)
-  )
+  ("C-c c s" . consult-org-roam-search))
 
 (use-package org-roam-ui
   :straight
@@ -191,8 +192,7 @@
   :straight (:host github :repo "yibie/org-workbench")
   :after org-roam ; 或 org-supertag、org-brain 等
   :config
-  (org-workbench-setup)
-)
+  (org-workbench-setup))
 
 ;; DATE
 (use-package org-roam-timestamps
@@ -201,8 +201,7 @@
   :config
   (org-roam-timestamps-mode 1)
   (setq org-roam-timestamps-parent-file t)
-  (setq org-roam-timestamps-remember-timestamps t)
-)
+  (setq org-roam-timestamps-remember-timestamps t))
 
 ;; =============================
 ;; 自定义函数
@@ -213,66 +212,45 @@
   If the link is not an Org-roam ID link or the node cannot be found, display an appropriate message without making changes."
   (interactive)
   (require 'org-roam)
-  (let 
-    ((element (org-element-context)))
+  (let ((element (org-element-context)))
     ;; Check if the cursor is on a link element
-    (if 
-      (eq (org-element-type element) 'link)
-      (let* 
-        (
-          (link-type (org-element-property :type element))      ;; Link type, e.g., "id"
-          (link-path (org-element-property :path element))      ;; Link target (ID for Org-roam)
-          (desc-begin (org-element-property :contents-begin element)) ;; Start of description text
-          (desc-end (org-element-property :contents-end element))     ;; End of description text
-        )
+    (if (eq (org-element-type element) 'link)
+      (let* (;; Link type, e.g., "id"
+          (link-type (org-element-property :type element))
+          ;; Link target (ID for Org-roam)
+          (link-path (org-element-property :path element))
+          ;; Start of description text
+          (desc-begin (org-element-property :contents-begin element))
+          ;; End of description text
+          (desc-end (org-element-property :contents-end element)))
         ;; Ensure the link is an Org-roam ID link
         (if (and (string= link-type "id") link-path)
-          (let* 
-            (
-              (node-id link-path)
+          (let* ((node-id link-path)
               ;; Query Org-roam database for the node title using EmacSQL
-              (title 
-                (caar
-                  (org-roam-db-query
+              (title (caar (org-roam-db-query
                     [:select title :from nodes :where (= id $s1)]
-                    node-id
-                  )
-                )
-              )
-            )
+                    node-id))))
             (cond
               ;; Case 1: Node not found
-              (
-                (null title)
-                (message "No node found with id=%s." node-id)
-              )
+              ((null title)
+                (message "No node found with id=%s." node-id))
               ;; Case 2: Description already matches the node title
-              ( 
-                (and desc-begin desc-end
-                  (string= title (buffer-substring-no-properties desc-begin desc-end))
-                )
-                (message "The link description is already up-to-date.")
-              )
+              ((and 
+                desc-begin 
+                desc-end
+                  (string= title (buffer-substring-no-properties desc-begin desc-end)))
+                (message "The link description is already up-to-date."))
               ;; Case 3: Update description to match node title
               (t
                 (save-excursion
                   (goto-char desc-begin)
                   (delete-region desc-begin desc-end)
-                  (insert title)
-                )
-                (message "Description updated to: %s" title)
-              )
-            )
-          )
+                  (insert title))
+                (message "Description updated to: %s" title))))
           ;; Not an ID link
-          (message "The current link is not an Org-roam ID link.")
-        )
-      )
+          (message "The current link is not an Org-roam ID link.")))
       ;; Cursor is not on a link
-      (message "The cursor is not on a link.")
-    )
-  )
-)
+      (message "The cursor is not on a link."))))
 
 (provide 'init-org-roam)
 ;;; init-org-roam.el ends here

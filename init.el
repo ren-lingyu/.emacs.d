@@ -31,7 +31,15 @@
 
 (require 'init-complete) ; 自动补全
 
+(require 'init-org-roam) ; org-roam及相关设置
+
+(require 'init-org-roam-citar) ; org-roam中citar及相关设置
+
+(require 'init-org-latex-preview) ; org-latex-preview
+
 ;; (require 'init-ai) ; AI辅助
+
+(require 'init-blog-publish) ; 博客发布设置
 
 (require 'init-orgraph) ; orgraph
 

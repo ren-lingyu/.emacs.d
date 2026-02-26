@@ -9,7 +9,6 @@
 
 (use-package citeproc)
 
-(defconst my/org-blog-directory orgraph-directory)
 (defconst blog/beginning-year 2026)
 ;; (defconst org-blog-org-blog-url "https://aren-coco.com/")
 ;; (defconst org-blog-org-blog-url "http://localhost:8081/")
@@ -367,8 +366,8 @@ PLIST, FILENAME, PUB-DIR follow the standard org-publish signature."
       (member (expand-file-name filename) (my/blog-files))
       (member (expand-file-name filename) 
         (list
-          (expand-file-name "sitemap.org" (expand-file-name "./roam/permanent/" my/org-blog-directory))
-          (expand-file-name "theindex.org" (expand-file-name "./roam/permanent/" my/org-blog-directory))
+          (expand-file-name "sitemap.org" (expand-file-name "./roam/permanent/" org-directory))
+          (expand-file-name "theindex.org" (expand-file-name "./roam/permanent/" org-directory))
         )
       )
     )
@@ -416,9 +415,9 @@ PLIST, FILENAME, PUB-DIR follow the standard org-publish signature."
 (setq org-publish-project-alist
   `(
     ("post"
-     :base-directory ,(expand-file-name "./roam/permanent/" my/org-blog-directory)
+     :base-directory ,(expand-file-name "./roam/permanent/" org-directory)
      :base-extension "org"
-     :publishing-directory ,(expand-file-name "./public/" my/org-blog-directory)
+     :publishing-directory ,(expand-file-name "./public/" org-directory)
      :recursive t
      :publishing-function my/org-html-publish-to-html
      :html-link-home "/index.html"
@@ -443,11 +442,11 @@ PLIST, FILENAME, PUB-DIR follow the standard org-publish signature."
      :sitemap-sort-folders: ignore
     )
     ("index"
-     :base-directory ,(expand-file-name "./roam/permanent/" my/org-blog-directory)
+     :base-directory ,(expand-file-name "./roam/permanent/" org-directory)
      :base-extension "org"
      :exclude ".*"
      :include ,(list "index.org" "about.org" "theindex.org")
-     :publishing-directory ,(expand-file-name "./public/" my/org-blog-directory)
+     :publishing-directory ,(expand-file-name "./public/" org-directory)
      :recursive nil
      :publishing-function org-html-publish-to-html
      :html-link-home "/index.html"
@@ -464,9 +463,9 @@ PLIST, FILENAME, PUB-DIR follow the standard org-publish signature."
      :makeindex nil
     )
     ("static"
-     :base-directory ,(expand-file-name "./static/" my/org-blog-directory)
+     :base-directory ,(expand-file-name "./static/" org-directory)
      :base-extension "css\\|js\\|png\\|svg\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|woff2\\|proto\\|bin"
-     :publishing-directory ,(expand-file-name "./public/" my/org-blog-directory)
+     :publishing-directory ,(expand-file-name "./public/" org-directory)
      :recursive t
      :publishing-function org-publish-attachment
     )

@@ -5,59 +5,48 @@
 (use-package org
   ;; :defer
   :demand t
-  :straight 
-  `(org
-    :fork 
-      (
-        :host nil
-        :repo "https://git.tecosaur.net/tec/org-mode.git"
-        :branch "dev"
-        :remote "tecosaur"
-      )
-    :files (:defaults "etc")
-    :build t
-    :pre-build
-    (with-temp-file "org-version.el"
-      (require 'lisp-mnt)
-      (let 
-        (
-          (version
-            (with-temp-buffer
-              (insert-file-contents "lisp/org.el")
-              (lm-header "version")
-            )
-          )
-          (git-version
-            (string-trim
-              (with-temp-buffer
-                (call-process "git" nil t nil "rev-parse" "--short" "HEAD")
-                (buffer-string)
-              )
-            )
-          )
-        )
-        (insert
-          (format "(defun org-release () \"The release version of Org.\" %S)\n" version)
-          (format "(defun org-git-version () \"The truncate git commit hash of Org mode.\" %S)\n" git-version)
-          "(provide 'org-version)\n"
-        )
-      )
-    )
-    :pin nil
-  )
+  ;; :straight (org :type git :host nil :repo "https://https.git.savannah.nongnu.org/git/org-mode.git")
+  :straight `(org
+              :fork (:host nil
+                     :repo "https://git.tecosaur.net/tec/org-mode.git"
+                     :branch "dev"
+                     :remote "tecosaur")
+              :files (:defaults "etc")
+              :build t
+              :pre-build
+              (with-temp-file "org-version.el"
+               (require 'lisp-mnt)
+               (let ((version
+                      (with-temp-buffer
+                        (insert-file-contents "lisp/org.el")
+                        (lm-header "version")))
+                     (git-version
+                      (string-trim
+                       (with-temp-buffer
+                         (call-process "git" nil t nil "rev-parse" "--short" "HEAD")
+                         (buffer-string)))))
+                (insert
+                 (format "(defun org-release () \"The release version of Org.\" %S)\n" version)
+                 (format "(defun org-git-version () \"The truncate git commit hash of Org mode.\" %S)\n" git-version)
+                 "(provide 'org-version)\n")))
+              :pin nil)
+  :init
+  (setq org-directory (expand-file-name "~/org/"))
   :config
   (setq org-startup-indented t)
   (setq org-startup-truncated nil)
   (setq org-startup-folded nil)
   (setq org-hide-leading-stars nil)
-  (setq org-latex-default-packages-alist nil)
-  (setq org-latex-packages-alist nil)
+  (setq org-latex-default-packages-alist nil) ; 确保默认包列表为空
+  (setq org-latex-packages-alist nil) ; 确保包列表为空
   (setq org-cite-export-processors '((latex bibtex) (html csl) (t basic)))
   (setq org-src-fontify-natively t)             ; Org代码块语法高亮
   (setq org-src-tab-acts-natively t)            ; Org代码块TAB缩进
   (setq org-timestamp-formats  '("%Y-%m-%d %a %z" . "%Y-%m-%d %H:%M:%S %z"))
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
+  (setq org-publish-timestamp-directory (expand-file-name "./cache/.org-timestamps/" org-directory))
+  (setq bookmark-file (expand-file-name "./cache/bookmarks" org-directory))
 )
 
 (require 'org-element)
@@ -100,12 +89,13 @@
   (org-edna-mode 1)
   (setq org-edna-use-inheritance t)
 )
+
 (use-package org-gtd
   :straight (:host github :repo "Trevoke/org-gtd.el" :branch "master")
   :after (org org-edna)
   :init
   (setq org-gtd-update-ack "4.0.0")
-  (setq org-gtd-directory (expand-file-name "./agenda" user-emacs-directory))
+  (setq org-gtd-directory (expand-file-name "./agenda" org-directory))
   (unless
     (file-directory-p org-gtd-directory)
     (make-directory org-gtd-directory t)
