@@ -69,7 +69,7 @@
               "#+AUTHOR: aRenCoco\n"
               "#+EMAIL: aRen_Coco@outlook.com\n"
               "#+DATE: " (format-time-string "<%Y-%m-%d %a %z>") "\n"
-              "#+FILETAGS: :zettel:post:\n"
+              "#+FILETAGS: :zettel:blog:\n"
             ))
           :unnarrowed t)
         ("P" "post article" plain "%?"
@@ -82,20 +82,20 @@
               "#+AUTHOR: aRenCoco\n"
               "#+EMAIL: aRen_Coco@outlook.com\n"
               "#+DATE: " (format-time-string "<%Y-%m-%d %a %z>") "\n"
-              "#+FILETAGS: :zettel:post:\n"
+              "#+FILETAGS: :zettel:blog:post:\n"
             ))
           :unnarrowed t)
         ("D" "draft article" plain "%?"
           :if-new 
           (file+head  
-          "draft/%(format-time-string \"%Y%m%d%z-\")${slug}.org"
+          "permanent/${id}/${slug}.org"
             ,(concat
               "#+TITLE: ${title}\n"
               "#+INDEX: ${title}\n"
               "#+AUTHOR: aRenCoco\n"
               "#+EMAIL: aRen_Coco@outlook.com\n"
               "#+DATE: " (format-time-string "<%Y-%m-%d %a %z>") "\n"
-              "#+FILETAGS: :draft:\n"
+              "#+FILETAGS: :zettel:blog:\n"
             ))
           :unnarrowed t)))))
 
