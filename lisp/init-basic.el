@@ -56,13 +56,9 @@
   (set-face-foreground 'default "white"))     ; 终端背景/前景色
 
 (setq initial-frame-alist
-      '((fullscreen . fullboth)
-	(top . 10)
-	(left . 10)))
+      '((fullscreen . maximized)))
 (setq default-frame-alist
-      '((fullscreen . fullboth)
-	(top . 10)
-	(left . 10)))
+      '((fullscreen . maximized)))
 
 (menu-bar-mode -1)                            ; 关闭菜单栏
 (tool-bar-mode -1)
