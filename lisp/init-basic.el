@@ -39,7 +39,7 @@
 (setq package-enable-at-startup nil) ; 禁用package.el
 (setq straight-vc-git-default-clone-depth 1) ; 使用浅克隆
 (setq straight-vc-git-default-protocol 'https)
-(setq straight-host-usernames '((github . "git")))
+;; (setq straight-host-usernames '((github . "git")))
 (setq native-comp-async-report-warnings-errors 'silent)
 
 ;; 基础编码和启动界面设置, 基本外观设置
@@ -55,10 +55,10 @@
   (set-face-background 'default "black")
   (set-face-foreground 'default "white"))     ; 终端背景/前景色
 
-(setq initial-frame-alist
-      '((fullscreen . maximized)))
 (setq default-frame-alist
-      '((fullscreen . maximized)))
+      '((fullscreen . nil)))
+
+(setq initial-frame-alist default-frame-alist)
 
 (menu-bar-mode -1)                            ; 关闭菜单栏
 (tool-bar-mode -1)
@@ -101,7 +101,7 @@
 (straight-use-package 'use-package)
 (eval-when-compile (require 'use-package))
 
-;; 有关窗口显示
+;; 有关 buffe 显示
 (setq display-buffer-alist
       '(("*compilation*"
 	 (display-buffer-in-direction)
@@ -239,8 +239,9 @@
   :config
   (setq default-input-method "pyim")
   (setq pyim-page-length 9)
-  (setq pyim-default-scheme 'cangjie)
-  (setq pyim-assistant-scheme 'quanpin)
+  ;; (setq pyim-default-scheme 'cangjie)
+  ;; (setq pyim-assistant-scheme 'quanpin)
+  (setq pyim-default-scheme 'quanpin)
   (setq-default pyim-punctuation-translate-p '(no)))
 
 (use-package pyim-basedict
@@ -277,7 +278,9 @@
   :straight (:host github :repo "preetpalS/emacs-dotenv-mode")
   :mode ("\\.env\\..*\\'" . dotenv-mode))
 
-;; 快捷键
+;; 键位设置和快捷键
+
+(setq x-super-keysym 'hyper)  ;通过把 Super 映射为 Hyper 在逻辑上禁用 Super 键
 
 ;; (global-set-key (kbd "RET") 'newline-and-indent) ; Enter 键设置为"新其一行并做缩进"
 ;; (global-set-key (kbd "M-w") 'kill-region)              ; 交换 M-w 和 C-w, M-w 为剪切

@@ -88,7 +88,7 @@
 			      (t (or description (format "eq:%s" path)))))
 			   ;; 自定义链接外观  
 			   :face 
-			   '(:inherit 'org-link
+			   '(;; :inherit 'org-link
 			     :foreground "dark red" 
 			     :background "yellow"
 			     :underline t)
