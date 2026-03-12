@@ -6,7 +6,6 @@
 (defconst texlive (expand-file-name "./config/texlive.sh" orgraph-directory))
 
 (with-eval-after-load 'ox-latex
-  (add-hook 'org-export-filter-final-output-functions #'my/insert-toc-after-abstract-or-title)
   (setq org-latex-precompile nil)
   (setq org-latex-compiler "lualatex")
   (setq org-latex-bib-compiler "biblatex")
@@ -30,7 +29,7 @@
            ("\\subsubsubsection{%s}" . "\\subsubsubsection*{%s}")
            ("\\paragraph{%s}" . "\\paragraph*{%s}")
            ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-	  ("slide"
+	  ("beamer"
            ,(mapconcat #'identity
 		       '("\\documentclass[8pt]{beamer}"
 			 "\\usepackage{org-beamer}")
@@ -44,21 +43,37 @@
   (setq org-export-headline-levels 4)
   (setq org-latex-default-class "note")
   ;; (setq org-latex-title-command "")
-  (setq org-export-with-toc nil)
+  (setq org-export-with-toc t)
   (defun my/insert-toc-after-abstract-or-title (output backend info)
-    (when (org-export-derived-backend-p backend 'latex)
+    (when (and (org-export-derived-backend-p backend 'latex)
+	       (string-match-p "\\\\documentclass[[:space:]]*\\(?:\\[.*?\\][[:space:]]*\\)?{[[:space:]]*article[[:space:]]*}" output))
       (if (string-match "\\\\end{abstract}" output)
           ;; 如果有 abstract 块, 在 \end{abstract} 后插入目录
-          (setq output
-                (replace-regexp-in-string "\\\\end{abstract}"
-					  "\\\\end{abstract}\n\\\\tableofcontents\n"
-					  output))
+	  (progn (setq output
+                       (replace-regexp-in-string "\\\\tableofcontents"
+						 ""
+						 output))
+		 (setq output
+                       (replace-regexp-in-string "\\\\end{abstract}"
+						 "\\\\end{abstract}\n\n\\\\tableofcontents\n"
+						 output))
+	    )
         ;; 如果没有 abstract 块, 在 \maketitle 后插入目录
         (setq output
               (replace-regexp-in-string "\\\\maketitle"
 					"\\\\maketitle\n\\\\tableofcontents\n"
 					output))))
     output)
+  (add-hook 'org-export-filter-final-output-functions #'my/insert-toc-after-abstract-or-title)
+  (defun my/remove-angle-brackets-in-timestamp (output backend info)
+    (when (org-export-derived-backend-p backend 'latex)
+      (setq output
+            (replace-regexp-in-string 
+             "\\(\\\\date{.*?\\)<\\([^>]+\\)>\\(.*?}\\)"
+             "\\1\\2\\3"
+             output)))
+    output)
+  (add-hook 'org-export-filter-final-output-functions #'my/remove-angle-brackets-in-timestamp)  
   ;; 定义\label{eq:...}和\eqref{eq:...}对应的链接类型
   (org-link-set-parameters "eq"
 			   :follow 
@@ -80,7 +95,7 @@
 			     (path description backend info)
 			     (cond
 			      ;; 对于 LaTeX 导出
-			      ((eq backend 'latex)
+			      ((or (eq backend 'latex) (eq backend 'beamer))
 			       (format "\\eqref{eq:%s}" path))
 			      ((eq backend 'html)
 			       (format "<span class=\"eqref\">eq:%s</span>" 
@@ -94,6 +109,12 @@
 			     :underline t)
 			   :help-echo 
 			   "公式引用链接. \n格式: [[eq:<label>]]. \n跳转时采用正则表达式查找当前光标所在buffer内\\label{eq:<label>}所在行. "))
+
+(with-eval-after-load 'ox-beamer
+  (setq org-beamer-frame-level 3)
+  (setq org-beamer-theme nil)
+  (setq org-beamer-outline-frame-title "Outlines")
+  (setq org-beamer-outline-frame-options "t"))
 
 (with-eval-after-load 'org-latex-preview
     (when (display-graphic-p) 
