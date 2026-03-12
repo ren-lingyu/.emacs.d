@@ -325,7 +325,7 @@
 	 :with-toc t
 	 :with-creator t
 	 :with-timestamp t
-	 :with-planning nil
+	 :with-planning t
 	 :html-postamble t ; 页脚
 	 :auto-preamble t
 	 :section-numbers t
