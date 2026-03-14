@@ -154,23 +154,22 @@
 			(expand-file-name "./texmf/bibtex/bib/ref.bib" org-directory)
 			(expand-file-name "./texmf/bibtex/bib/zotero-my-library.bib" org-directory))))
 
-(with-eval-after-load 'org-roam-organize
-  (setq org-roam-organize/tag-id-alist 
-        '(("map" . "0c935953-8648-4d41-9d17-51c329f2a508")
-          ("zettel" . "1c30c3be-1def-426b-9bf6-c0e53b084fbf")
-          ("ref" . "dea94cb6-7409-4b2b-88d4-872fd29fadd3")
-          ("idea" . "af10604e-797c-44f4-8227-f28bacb2b0f1")
-          ("note" . "8b3dc8f5-d750-4cf4-8c93-1d4c8a728991")
-          ("blog" . "ab4d834c-ee95-4fc8-8ea2-745b58d6c326"))))
-
-(mapc #'require '(org org-roam org-gtd consult consult-org-roam auctex vertico orderless marginalia))
+(mapc #'require '(org org-roam org-roam-organize org-gtd consult consult-org-roam auctex vertico orderless marginalia))
 
 ;; (setq compile-command "emacs --batch --load ~/.emacs.d/init.el --eval \"(org-publish-all t)\"")
 
 ;; 钩子
+(defun my/post-files ()
+  "Return a list of note files containing 'post' tag." ;
+  (seq-uniq (seq-map #'car (org-roam-db-query [:select [nodes:file]
+						       :from tags
+						       :left-join nodes
+						       :on (= tags:node-id nodes:id)
+						       :where (like tag (quote "%\"post\"%"))]))))
+
 (add-hook 'before-save-hook 
 	  (lambda ()
-	    (let* ((post_file_list (my/blog-files)))
+	    (let* ((post_file_list (my/post-files)))
 	      (cond ((and 
 		      buffer-file-name
 		      (file-in-directory-p buffer-file-name org-roam-directory)
@@ -183,7 +182,8 @@
 		     (message "Updated DATE in %s" (buffer-file-name)))
 		    ((and
 		      buffer-file-name
-		      (file-in-directory-p buffer-file-name (expand-file-name "./permanent/" org-roam-directory)))
+		      (file-in-directory-p buffer-file-name (expand-file-name "./permanent/" org-roam-directory))
+		      (not (member buffer-file-name post_file_list)))
 		     (my/update-and-insert-or-not-date-in-org-file 
 		      orgraph-directory
 		      "<%Y-%m-%d %a %z>"
@@ -194,10 +194,9 @@
 	  (lambda ()
 	    (let* ((post_file_list (my/blog-files))
 		       (filename (buffer-file-name)))
-	      (when (and
-		     filename
-		     (file-in-directory-p filename (expand-file-name "./permanent/" org-roam-directory))
-		     (member filename post_file_list))
+	      (when (and filename
+			 (file-in-directory-p filename (expand-file-name "./permanent/" org-roam-directory))
+			 (member filename post_file_list))
 		(org-publish-all)
 		(message "[INFO] Publish finished. ")))))
 

@@ -95,7 +95,7 @@
   )
 )
 
-(add-hook 'org-mode-hook #'my/org-latex-font-lock)
+;; (add-hook 'org-mode-hook #'my/org-latex-font-lock)
 (add-hook 'LaTeX-mode-hook #'my/org-latex-font-lock)
 
 ;; 与latex环境有关的快捷键
