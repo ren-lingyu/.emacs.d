@@ -7,7 +7,7 @@
 !README.org
 !LICENSE
 !init.el
-!custom.el
+!early-init.el
 
 # 子目录文件白名单
 !lisp/
