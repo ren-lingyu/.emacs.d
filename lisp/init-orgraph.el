@@ -139,31 +139,26 @@
 	 "\\usepackage{org-preview}\n"
 	 "\\pagestyle{empty}\n"))
   (setq org-latex-preview-compiler-command-map
-        `(("pdflatex" . ,(format "%s latexmk -norc -latex=pdflatex" (shell-quote-argument texlive))) 
-          ("xelatex" . ,(format "%s latexmk -norc -xelatex -no-pdf" (shell-quote-argument texlive)))
-          ("lualatex" . ,(format "%s latexmk -norc -dvilua" (shell-quote-argument texlive)))))
-  (setq org-latex-preview-process-default 'docker)
+        `(("pdflatex" . "latexmk -norc -latex=pdflatex")
+          ("xelatex" . "latexmk -norc -xelatex -no-pdf")
+          ("lualatex" . "latexmk -norc -dvilua")))
+  (setq org-latex-preview-process-default 'dvisvgm)
   (setq org-latex-preview-process-alist
-        `((docker :programs ("docker")
+        `((dvisvgm :programs ("dvisvgm" "latexmk")
+                  :description "dvi > svg"
+                  :message "you need to install the programs: texlive and dvisvgm."
+                  :image-input-type "dvi"
+                  :image-output-type "svg"
+                  :latex-compiler ("%l -interaction=nonstopmode -outdir=%o %f")
+                  :image-converter ("dvisvgm --page=1- --optimize --clipjoin --relative --no-fonts --bbox=preview -o %B-%%9p.svg %f"))
+	  (docker :programs ("docker")
                   :description "dvi > svg"
                   :message "you need to install the programs: texlive and dvisvgm in docker image."
                   :image-input-type "dvi"
                   :image-output-type "svg"
-                  :latex-compiler ("%l -interaction=nonstopmode -outdir=%o %f")
+                  :latex-compiler (,(format "%s %%l -interaction=nonstopmode -outdir=%%o %%f" (shell-quote-argument texlive)))
                   :image-converter 
                   (,(format "%s dvisvgm --page=1- --optimize --clipjoin --relative --no-fonts --bbox=preview -o %%B-%%%%9p.svg %%f" (shell-quote-argument texlive)))))))
-
-;; (with-eval-after-load 'ob-latex
-;;   (setq org-babel-latex-process-alist
-;; 	`((svg :programs ("docker")
-;;                :description "dvi > svg"
-;;                :message "you need to install the programs: texlive and dvisvgm in docker image."
-;;                :image-input-type "dvi"
-;;                :image-output-type "svg"
-;; 	       :latex-compiler
-;; 	       (,(format "%s latexmk -norc -dvilua -interaction=nonstopmode -outdir=%%o %%f" (shell-quote-argument texlive)))
-;;                :image-converter 
-;;                (,(format "%s dvisvgm --page=1- --optimize --clipjoin --relative --no-fonts --bbox=preview -o %%B-%%%%9p.svg %%f" (shell-quote-argument texlive)))))))
 
 (with-eval-after-load 'citar
   (setq citar-notes-paths

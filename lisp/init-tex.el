@@ -5,14 +5,6 @@
 (use-package auctex
   :defer t
   :init
-  (setq TeX-auto-save t ; 自动保存
-        TeX-parse-self t ; 自动解析文档结构
-        TeX-master nil ; 不指定主文件
-        preview-image-type nil ; 禁用预览
-        TeX-command-default "LaTeX"
-        TeX-save-query nil
-        TeX-show-compilation nil ; 禁用编译
-        TeX-PDF-mode nil)
   (add-hook 'TeX-mode-hook #'TeX-fold-mode)
   (add-hook 'LaTeX-mode-hook
     (lambda ()
@@ -29,6 +21,13 @@
   )
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
+  (setq TeX-parse-self t); 自动解析文档结构
+  (setq TeX-master nil) ; 不指定主文件
+  (setq preview-image-type nil) ; 禁用预览
+  (setq TeX-command-default "LuaLaTeX")
+  (setq TeX-save-query nil)
+  (setq TeX-show-compilation nil) ; 禁用编译
+  (setq TeX-PDF-mode nil)
 )
 
 (use-package company-auctex
@@ -37,6 +36,7 @@
 )
 
 (use-package company-math
+  :disabled
   :after company
   :init
   (add-to-list 'company-backends 'company-math-symbols-unicode)
