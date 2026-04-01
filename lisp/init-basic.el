@@ -283,6 +283,9 @@
 ;; (global-set-key (kbd "M-m") 'move-beginning-of-line)   ; 交换 C-a 和 M-m, M-m 为到真正的行首
 ;; (global-set-key (kbd "C-c /") 'comment-or-uncomment-region) ; 为选中的代码加注释/去注释, 与VSCode中一致
 
+(global-set-key (kbd "C-c m p") 'org-mark-ring-push)
+(global-set-key (kbd "C-c m g") 'org-mark-ring-goto)
+
 (global-set-key
  (kbd "C-c c c") 
  (lambda ()
