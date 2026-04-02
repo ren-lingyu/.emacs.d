@@ -45,7 +45,7 @@
 (unless (display-graphic-p)
   (setq frame-background-mode 'dark)
   (set-face-background 'default "black")
-  (set-face-foreground 'default "white"))     ; 终端背景/前景色
+  (set-face-foreground 'default "white"))
 
 ;; (setq frame-resize-pixelwise t)
 
@@ -64,6 +64,7 @@
 
 (column-number-mode t)                        ; 在 Mode line 显示列号
 (global-display-line-numbers-mode 1)          ; 全局显示行号
+(global-prettify-symbols-mode t)
 ;; (setq display-line-numbers-type 'relative) ; 显示相对行号
 
 
@@ -86,7 +87,6 @@
 ;; (setq confirm-kill-emacs #'y-or-n-p) ; 关闭 Emacs 前确认
 
 (defconst *spell-check-support-enabled* t)    ; 是否启用拼写检查
-
 
 ;; 忽略格式风格警告
 (setq byte-compile-warnings '(not docstrings))
