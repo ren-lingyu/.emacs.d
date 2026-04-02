@@ -10,6 +10,7 @@
 ├── .gitignore                       # Git 忽略规则
 ├── LICENSE                          # MIT 许可证
 ├── README.org                       # 项目文档
+├── early-init.el                    # 早期初始化配置
 ├── init.el                          # 主配置入口
 ├── custom.el                        # 自定义配置 (由 Emacs 生成)
 └── lisp/                            # 功能模块目录
