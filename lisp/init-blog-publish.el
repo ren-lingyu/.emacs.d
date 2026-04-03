@@ -248,6 +248,25 @@
 						       :on (= tags:node-id nodes:id)
 						       :where (like tag (quote "%\"blog\"%"))]))))
 
+(defun my/blog-insert-meta-description (output _backend _info)
+  (let* ((re (rx (seq "<div" (* (not (any ">"))) "class=\"abstract\"" (* (not (any ">"))) ">"
+		      (group (*? anything))
+		      "</div>")))
+	 (abstract
+	  (when (string-match re output)
+	    (let* ((content (match-string 1 output)))
+	      (setq content (replace-regexp-in-string "<sup>.*?</sup>" "" content))
+	      (setq content (replace-regexp-in-string "<sub>.*?</sub>" "" content))
+	      (setq content (replace-regexp-in-string "<[^>]+>" "" content))
+	      (setq content (replace-regexp-in-string "\n" " " content))
+	      (string-trim content)))))
+    (when abstract
+      (setq output (replace-regexp-in-string
+		    "</head>"
+		    (format "<meta name=\"description\" content=\"%s\">\n</head>" abstract)
+		    output)))
+    output))
+
 (defun my-generator/org-html-publish-to-html (blog_file_list)
   "Generate function with args PLIST, FILENAME and PUB-DIR to publish files who member a list, which is appending to BLOG_FILE_LIST, to HTML."
   (lambda (plist filename pub-dir)
@@ -318,9 +337,12 @@
 	 ;; :publishing-function ,(my-generator/org-html-publish-to-html 'my/blog-file-list)
 	 ;; :completion-function ,(lambda (project) (setq my/blog-file-list nil))
 	 :publishing-function org-html-publish-to-html
+	 :filter-final-output ,(list #'my/blog-insert-meta-description)
 	 :html-link-home "/index.html"
-	 :with-author "aRenCoco"
-	 :with-email "aRen_Coco@outlook.com" 
+	 :author "aRenCoco"
+	 :email "aRen_Coco@outlook.com"
+	 :with-author t
+	 :with-email t 
 	 :headline-levels 5
 	 :with-toc t
 	 :with-creator t
@@ -346,12 +368,15 @@
 	 :exclude ".*"
 	 :include ("index.org" "sitemap.org" "about.org" "theindex.org")
 	 :publishing-directory ,(expand-file-name "./public/" org-directory)
+	 :filter-final-output ,(list #'my/blog-insert-meta-description)
 	 :recursive nil
 	 :publishing-function org-html-publish-to-html
 	 :completion-function ,(lambda (project) (org-publish-file (expand-file-name "theindex.org" (plist-get project :base-directory)) (cons "index" project)))
 	 :html-link-home "/index.html"
-	 :with-author "aRenCoco"
-	 :with-email "aRen_Coco@outlook.com" 
+	 :author "aRenCoco"
+	 :email "aRen_Coco@outlook.com" 
+	 :with-author t
+	 :with-email t 
 	 :headline-levels 5
 	 :with-toc nil
 	 :with-creator t
