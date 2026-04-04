@@ -62,7 +62,7 @@
 	          "<link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\"/>\n"
 	          "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/org-html-style-default.css?v=" (format-time-string "%Y%m%d%z") "\"/>\n"
 	          "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/org-html-style-local.css?v=" (format-time-string "%Y%m%d%z") "\"/>\n"
-              "<link rel=\"alternate\" type=\"application/atom+xml\" title=\"" org-blog-site-name " - Atom\" href=\"/feed.xml\"/>\n"))
+              "<link rel=\"alternate\" type=\"application/atom+xml\" title=\"" org-blog-site-name " - Atom\" href=\"/feed.atom\"/>\n"))
 
 (setq org-html-home/up-format
       "<div class=\"flexbox\">\n")
@@ -79,7 +79,7 @@
 		  "<a accesskey=\"\" href=\"/about.html\">About</a>\n"
 		  "<a accesskey=\"\" href=\"/style.html\">Style</a>\n"
 		  "<a accesskey=\"\" href=\"/theindex.html\">Index</a>\n"
-		  "<a accesskey=\"\" href=\"" org-blog-site-url "/feed.xml\">Feed</a>\n"
+		  "<a accesskey=\"\" href=\"" org-blog-site-url "/feed.atom\">Feed</a>\n"
 		  "</nav>\n"
 		  "</header>\n"
 		  ;; "</div>\n"
