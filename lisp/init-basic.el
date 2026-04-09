@@ -89,8 +89,8 @@
 (delete-selection-mode t)                     ; 选中文本后输入替换
 
 (setq make-backup-files t)                     ; 备份文件 <filename>~
-(setq auto-save-default t)                     ; 自动保存文件 #<filename>#
-(setq create-lockfiles t)                      ; 锁文件 .#<filename>
+(setq auto-save-default nil)                   ; 自动保存文件 #<filename>#
+(setq create-lockfiles nil)                    ; 锁文件 .#<filename>
 
 (add-hook 'bookmark-exit-hook #'bookmark-save)
 

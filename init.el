@@ -36,7 +36,7 @@
 
 (require 'init-org-roam-citar) ; org-roam中citar及相关设置
 
-(require 'init-org-latex-preview) ; org-latex-preview
+(require 'init-org-latex-preview) ; 预览
 
 (require 'init-feed)
 

@@ -67,15 +67,16 @@
     :inverse-video t))
 
 ;; 嵌入
-;; (use-package org-transclusion
-;;   :after org
-;;   :straight (:host github :repo "nobiot/org-transclusion" :branch "main")
-;;   :hook (org-mode . org-transclusion-mode))
+(use-package org-transclusion
+  :after org
+  :straight (:host github :repo "nobiot/org-transclusion" :branch "main")
+  :hook (org-mode . org-transclusion-mode))
 
-;; (use-package org-include-inline
-;;   :after org
-;;   :straight (:host github :repo "yibie/org-include-inline" :branch "main")
-;;   :hook (org-mode . org-include-inline-mode))
+(use-package org-include-inline
+  :disabled
+  :after org
+  :straight (:host github :repo "yibie/org-include-inline" :branch "main")
+  :hook (org-mode . org-include-inline-mode))
 
 ;; GTD and agenda
 (use-package org-edna

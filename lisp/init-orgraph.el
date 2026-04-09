@@ -12,36 +12,36 @@
   (setq org-latex-pdf-process
         (list "latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=$(realpath %o) $(realpath %f)"))
   (setq org-latex-precompile-compiler-map
-    `(("pdflatex" . "latex")
-      ("xelatex" . "xelatex -no-pdf")
-      ("lualatex" . "dvilualatex" )))
+        `(("pdflatex" . "latex")
+          ("xelatex" . "xelatex -no-pdf")
+          ("lualatex" . "dvilualatex" )))
   (setq org-latex-classes
-	`(("article"
+        `(("article"
            ,(mapconcat #'identity
-		       '("\\documentclass[10pt]{article}")
-		       "\n")
+                       '("\\documentclass[10pt]{article}")
+                       "\n")
            ("\\section{%s}" . "\\section*{%s}")
            ("\\subsection{%s}" . "\\subsection*{%s}")
            ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
            ("\\subsubsubsection{%s}" . "\\subsubsubsection*{%s}")
            ("\\paragraph{%s}" . "\\paragraph*{%s}")
            ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-	  ("note"
+          ("note"
            ,(mapconcat #'identity
-		       '("\\documentclass[10pt,a4paper]{article}"
-			 "\\usepackage{org-note}")
-		       "\n")
+                       '("\\documentclass[10pt,a4paper]{article}"
+                         "\\usepackage{org-note}")
+                       "\n")
            ("\\section{%s}" . "\\section*{%s}")
            ("\\subsection{%s}" . "\\subsection*{%s}")
            ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
            ("\\subsubsubsection{%s}" . "\\subsubsubsection*{%s}")
            ("\\paragraph{%s}" . "\\paragraph*{%s}")
            ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-	  ("beamer"
+          ("beamer"
            ,(mapconcat #'identity
-		       '("\\documentclass[8pt]{beamer}"
-			 "\\usepackage{org-beamer}")
-		       "\n")
+                       '("\\documentclass[8pt]{beamer}"
+                         "\\usepackage{org-beamer}")
+                       "\n")
            ("\\section{%s}" . "\\section*{%s}")
            ("\\subsection{%s}" . "\\subsection*{%s}")
            ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -54,23 +54,32 @@
   (setq org-export-with-toc t)
   (defun my/insert-toc-after-abstract-or-title (output backend info)
     (when (and (org-export-derived-backend-p backend 'latex)
-	       (string-match-p "\\\\documentclass[[:space:]]*\\(?:\\[.*?\\][[:space:]]*\\)?{[[:space:]]*article[[:space:]]*}" output))
+               (string-match-p "\\\\documentclass[[:space:]]*\\(?:\\[.*?\\][[:space:]]*\\)?{[[:space:]]*article[[:space:]]*}" output))
       (if (string-match "\\\\end{abstract}" output)
           ;; 如果有 abstract 块, 在 \end{abstract} 后插入目录
-	  (progn (setq output
+          (progn (setq output
                        (replace-regexp-in-string "\\\\tableofcontents"
-						 ""
-						 output))
-		 (setq output
+                                                 ""
+                                                 output))
+                 (setq output
                        (replace-regexp-in-string "\\\\end{abstract}"
-						 "\\\\end{abstract}\n\n\\\\tableofcontents\n"
-						 output))
-	    )
+                                                 "\\\\end{abstract}\n\n\\\\tableofcontents\n"
+                                                 output))
+                 )
         ;; 如果没有 abstract 块, 在 \maketitle 后插入目录
-        (setq output
-              (replace-regexp-in-string "\\\\maketitle"
-					"\\\\maketitle\n\\\\tableofcontents\n"
-					output))))
+        (progn (setq output
+                     (replace-regexp-in-string "\\\\tableofcontents"
+                                               ""
+                                               output))
+               (setq output
+                     (replace-regexp-in-string "\\\\maketitle"
+                                               "\\\\maketitle\n\\\\tableofcontents\n"
+                                               output))))
+      (setq output
+            (replace-regexp-in-string
+             "\\\\end{abstract}[[:space:]]*\\\\tableofcontents[[:space:]]*\\\\begin{abstract}"
+             "\\\\end{abstract}\n\n\\\\begin{abstract}"
+             output)))
     output)
   (add-hook 'org-export-filter-final-output-functions #'my/insert-toc-after-abstract-or-title)
   (defun my/remove-angle-brackets-in-timestamp (output backend info)
@@ -84,34 +93,34 @@
   (add-hook 'org-export-filter-final-output-functions #'my/remove-angle-brackets-in-timestamp)  
   ;; 定义\label{eq:...}和\eqref{eq:...}对应的链接类型
   (org-link-set-parameters "eq"
-			   :follow 
-			   (lambda (path arg)
-			     (let ((label (concat "\\label{eq:" path "}")))
-			       (org-mark-ring-push)
-			       (goto-char (point-min))
-			       (if (re-search-forward label nil t)
-				   (progn
-				     (beginning-of-line)
-				     (recenter)
-				     (message "找到公式引用: %s" label))
-				 (message "未找到公式引用: %s" label))))
-			   ;; 设置导出函数，导出为 \eqref{eq:...}
-			   :export 
-			   (lambda (path description backend info)
-			     (cond
-			      ((or (eq backend 'latex) (eq backend 'beamer))
-			       (format "\\eqref{eq:%s}" path))
-			      ((eq backend 'html)
-			       (format "<span class=\"eqref\">eq:%s</span>" 
-				       (or description path)))
-			      (t (or description (format "eq:%s" path)))))
-			   :face 
-			   '(;; :inherit 'org-link
-			     :foreground "dark red" 
-			     :background "yellow"
-			     :underline t)
-			   :help-echo 
-			   "公式引用链接. \n格式: [[eq:<label>]]. \n跳转时采用正则表达式查找当前光标所在buffer内\\label{eq:<label>}所在行. "))
+                           :follow 
+                           (lambda (path arg)
+                             (let ((label (concat "\\label{eq:" path "}")))
+                               (org-mark-ring-push)
+                               (goto-char (point-min))
+                               (if (re-search-forward label nil t)
+                                   (progn
+                                     (beginning-of-line)
+                                     (recenter)
+                                     (message "找到公式引用: %s" label))
+                                 (message "未找到公式引用: %s" label))))
+                           ;; 设置导出函数，导出为 \eqref{eq:...}
+                           :export 
+                           (lambda (path description backend info)
+                             (cond
+                              ((or (eq backend 'latex) (eq backend 'beamer))
+                               (format "\\eqref{eq:%s}" path))
+                              ((eq backend 'html)
+                               (format "<span class=\"eqref\">eq:%s</span>" 
+                                       (or description path)))
+                              (t (or description (format "eq:%s" path)))))
+                           :face 
+                           '(;; :inherit 'org-link
+                             :foreground "dark red" 
+                             :background "yellow"
+                             :underline t)
+                           :help-echo 
+                           "公式引用链接. \n格式: [[eq:<label>]]. \n跳转时采用正则表达式查找当前光标所在buffer内\\label{eq:<label>}所在行. "))
 
 (with-eval-after-load 'ox-beamer
   (setq org-beamer-frame-level 3)
@@ -125,12 +134,12 @@
   (setq org-latex-preview-mode-ignored-environments nil)
   (setq org-latex-preview-process-precompile nil)
   (setq org-latex-preview-preamble
-	(concat
-	 "\\documentclass{article}\n"
-	 "\\usepackage{xcolor}\n"
-	 "[PACKAGES]\n"
-	 "\\usepackage{org-preview}\n"
-	 "\\pagestyle{empty}\n"))
+        (concat
+         "\\documentclass{article}\n"
+         "\\usepackage{xcolor}\n"
+         "[PACKAGES]\n"
+         "\\usepackage{org-preview}\n"
+         "\\pagestyle{empty}\n"))
   (setq org-latex-preview-compiler-command-map
         `(("pdflatex" . "latexmk -norc -latex=pdflatex")
           ("xelatex" . "latexmk -norc -xelatex -no-pdf")
@@ -138,13 +147,13 @@
   (setq org-latex-preview-process-default 'dvisvgm)
   (setq org-latex-preview-process-alist
         `((dvisvgm :programs ("dvisvgm" "latexmk")
-                  :description "dvi > svg"
-                  :message "you need to install the programs: texlive and dvisvgm."
-                  :image-input-type "dvi"
-                  :image-output-type "svg"
-                  :latex-compiler ("%l -interaction=nonstopmode -outdir=%o %f")
-                  :image-converter ("dvisvgm --page=1- --optimize --clipjoin --relative --no-fonts --bbox=preview -o %B-%%9p.svg %f"))
-	  (docker :programs ("docker")
+                   :description "dvi > svg"
+                   :message "you need to install the programs: texlive and dvisvgm."
+                   :image-input-type "dvi"
+                   :image-output-type "svg"
+                   :latex-compiler ("%l -interaction=nonstopmode -outdir=%o %f")
+                   :image-converter ("dvisvgm --page=1- --optimize --clipjoin --relative --no-fonts --bbox=preview -o %B-%%9p.svg %f"))
+          (docker :programs ("docker")
                   :description "dvi > svg"
                   :message "you need to install the programs: texlive and dvisvgm in docker image."
                   :image-input-type "dvi"
@@ -155,11 +164,11 @@
 
 (with-eval-after-load 'citar
   (setq citar-notes-paths
-	(list (expand-file-name "./literature/" org-roam-directory))
-	citar-library-paths nil)
+        (list (expand-file-name "./literature/" org-roam-directory))
+        citar-library-paths nil)
   (setq citar-bibliography
-	(list (expand-file-name "./texmf/bibtex/bib/ref.bib" org-directory)
-	      (expand-file-name "./texmf/bibtex/bib/zotero-my-library.bib" org-directory))))
+        (list (expand-file-name "./texmf/bibtex/bib/ref.bib" org-directory)
+              (expand-file-name "./texmf/bibtex/bib/zotero-my-library.bib" org-directory))))
 
 (mapc #'require '(org org-roam org-roam-organize org-gtd consult consult-org-roam auctex vertico orderless marginalia))
 
@@ -169,43 +178,43 @@
 (defun my/post-files ()
   "Return a list of note files containing 'post' tag." ;
   (seq-uniq (seq-map #'car (org-roam-db-query [:select [nodes:file]
-						       :from tags
-						       :left-join nodes
-						       :on (= tags:node-id nodes:id)
-						       :where (like tag (quote "%\"post\"%"))]))))
+                                                       :from tags
+                                                       :left-join nodes
+                                                       :on (= tags:node-id nodes:id)
+                                                       :where (like tag (quote "%\"post\"%"))]))))
 
 (add-hook 'before-save-hook 
-	  (lambda ()
-	    (let* ((post_file_list (my/post-files)))
-	      (cond ((and 
-		      buffer-file-name
-		      (file-in-directory-p buffer-file-name org-roam-directory)
-		      (not (file-in-directory-p buffer-file-name (expand-file-name "./literature/" org-roam-directory)))
-		      (not (member buffer-file-name post_file_list)))
-		     (my/update-and-insert-or-not-date-in-org-file 
-		      orgraph-directory
-		      "<%Y-%m-%d %a %z>" 
-		      t)
-		     (message "Updated DATE in %s" (buffer-file-name)))
-		    ((and
-		      buffer-file-name
-		      (file-in-directory-p buffer-file-name (expand-file-name "./permanent/" org-roam-directory))
-		      (not (member buffer-file-name post_file_list)))
-		     (my/update-and-insert-or-not-date-in-org-file 
-		      orgraph-directory
-		      "<%Y-%m-%d %a %z>"
-		      nil))
-		    (t nil)))))
+          (lambda ()
+            (let* ((post_file_list (my/post-files)))
+              (cond ((and 
+                      buffer-file-name
+                      (file-in-directory-p buffer-file-name org-roam-directory)
+                      (not (file-in-directory-p buffer-file-name (expand-file-name "./literature/" org-roam-directory)))
+                      (not (member buffer-file-name post_file_list)))
+                     (my/update-and-insert-or-not-date-in-org-file 
+                      orgraph-directory
+                      "<%Y-%m-%d %a %z>" 
+                      t)
+                     (message "Updated DATE in %s" (buffer-file-name)))
+                    ((and
+                      buffer-file-name
+                      (file-in-directory-p buffer-file-name (expand-file-name "./permanent/" org-roam-directory))
+                      (not (member buffer-file-name post_file_list)))
+                     (my/update-and-insert-or-not-date-in-org-file 
+                      orgraph-directory
+                      "<%Y-%m-%d %a %z>"
+                      nil))
+                    (t nil)))))
 
 (add-hook 'after-save-hook
-	  (lambda ()
-	    (let* ((post_file_list (my/blog-files))
-		       (filename (buffer-file-name)))
-	      (when (and filename
-			 (file-in-directory-p filename (expand-file-name "./permanent/" org-roam-directory))
-			 (member filename post_file_list))
-		(org-publish-all)
-		(message "[INFO] Publish finished. ")))))
+          (lambda ()
+            (let* ((post_file_list (my/blog-files))
+                   (filename (buffer-file-name)))
+              (when (and filename
+                         (file-in-directory-p filename (expand-file-name "./permanent/" org-roam-directory))
+                         (member filename post_file_list))
+                (org-publish-all)
+                (message "[INFO] Publish finished. ")))))
 
 ;; load init-local.el
 (defun load-local ()
