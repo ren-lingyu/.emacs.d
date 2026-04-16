@@ -129,10 +129,6 @@
   (setq org-beamer-outline-frame-options "t"))
 
 (with-eval-after-load 'org-latex-preview
-  (when (display-graphic-p) 
-    (setq org-startup-with-latex-preview t))
-  (setq org-latex-preview-mode-ignored-environments nil)
-  (setq org-latex-preview-process-precompile nil)
   (setq org-latex-preview-preamble
         (concat
          "\\documentclass{article}\n"
