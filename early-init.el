@@ -22,5 +22,11 @@
 ;; compile warnings
 (setq native-comp-async-report-warnings-errors 'silent)
 
+;; 初始外观
+(setq default-frame-alist
+      '((background-color . "gray10")
+        (foreground-color . "gray90")
+        (fullscreen . nil)))
+
 (provide 'early-init)
 ;;; early-init.el ends here

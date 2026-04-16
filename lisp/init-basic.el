@@ -63,7 +63,14 @@
 ;; (setq frame-resize-pixelwise t)
 
 (setq default-frame-alist
-      '((fullscreen . nil)))
+      (cond ((and (string-equal (frame-monitor-attribute 'name) "eDP-1")
+            (equal (frame-monitor-attribute 'geometry) '(0 0 3072 1920)))
+             '((fullscreen . maximized)))
+            ((and (string-equal (frame-monitor-attribute 'name) "HDMI-1")
+                  (equal (frame-monitor-attribute 'geometry) '(3072 408 1920 1200)))
+             '((fullscreen . maximized)))
+            (t
+             '((fullscreen . nil)))))
 
 (setq initial-frame-alist default-frame-alist)
 
