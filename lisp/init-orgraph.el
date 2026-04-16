@@ -170,7 +170,7 @@
         (list (expand-file-name "./texmf/bibtex/bib/ref.bib" org-directory)
               (expand-file-name "./texmf/bibtex/bib/zotero-my-library.bib" org-directory))))
 
-(mapc #'require '(org org-roam org-roam-organize org-gtd consult consult-org-roam auctex vertico orderless marginalia))
+;; (mapc #'require '(org org-roam org-roam-organize org-gtd consult consult-org-roam auctex vertico orderless marginalia))
 
 ;; (setq compile-command "emacs --batch --load ~/.emacs.d/init.el --eval \"(org-publish-all t)\"")
 
@@ -215,11 +215,6 @@
                          (member filename post_file_list))
                 (org-publish-all)
                 (message "[INFO] Publish finished. ")))))
-
-;; load init-local.el
-(defun load-local ()
-  (interactive)
-  (load-file (expand-file-name "./config/init-local.el" orgraph-directory)))
 
 (provide 'init-orgraph)
 ;;; init-orgraph.el ends here

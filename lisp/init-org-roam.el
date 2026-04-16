@@ -148,6 +148,7 @@
 (global-set-key (kbd "C-c h d") (lambda () (interactive) (insert (concat "\n* " (format-time-string "%Y-%m-%d %A %z") "\n"))))
 
 (use-package consult-org-roam
+  :disabled
   :after (org-roam consult)
   :init
   (require 'org-roam)
@@ -201,6 +202,7 @@
 
 ;; 卡片工作台
 (use-package org-workbench
+  :disabled
   :straight (:host github :repo "yibie/org-workbench")
   :after org-roam ; 或 org-supertag、org-brain 等
   :config
