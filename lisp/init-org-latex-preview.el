@@ -20,7 +20,7 @@
   (setq org-latex-preview-mode-track-inserts nil)
   (setq org-startup-with-latex-preview nil)
   (setq org-latex-preview-mode-ignored-environments nil)
-  (setq org-latex-preview-process-precompile t)
+  (setq org-latex-preview-process-precompile nil) ; lualatex does not support precompile
   (setq org-latex-preview-mode nil))
 
 (provide 'init-org-latex-preview)
