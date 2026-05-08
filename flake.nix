@@ -1,15 +1,34 @@
 {
+  
   description = "aRenCoco's Emacs configuration";
-  outputs = { self } : {
-    homeManagerModules.default = { config, lib, pkgs, ... }: {
-      home.file = {
-        ".emacs.d/init.el".source = "${self}/init.el";
-        ".emacs.d/early-init.el".source = "${self}/early-init.el";
-        ".emacs.d/lisp" = {
-          source = "${self}/lisp";
-          recursive = true;
-        };
+  
+  outputs = { self }: {
+    
+    homeManagerModules = rec {
+      
+      emacsConfig = { emacsConfigDir } : { config, lib, pkgs, ... }: {
+        
+        home.file = builtins.listToAttrs [
+          {
+            name = "${emacsConfigDir}/early-init.el";
+            value.source = "${self}/early-init.el";
+          }
+          {
+            name = "${emacsConfigDir}/init.el";
+            value.source = "${self}/init.el";
+          }
+          {
+            name = "${emacsConfigDir}/lisp";
+            value = { source = "${self}/lisp"; recursive = true; };
+          }
+        ];
+        
       };
+
+      default = emacsConfig { emacsConfigDir = ".emacs.d" };
+      
     };
+    
   };
+  
 }
