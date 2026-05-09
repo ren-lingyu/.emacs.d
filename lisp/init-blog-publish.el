@@ -95,7 +95,7 @@
 		  cc-license-no-genic-work-no-full-tool-name
 		  "</p>\n"
 		  "<p>\n"
-		  "Generated at <span class=\"update-time\">%T</span> by %c on <a href=\"https://github.com/nix-community/NixOS-WSL\">NixOS-WSL</a>." 
+		  "Generated at <span class=\"update-time\">%T</span> by %c on <a href=\"https://nixos.org\">NixOS</a>." 
 		  "</p>\n"
 		  "</footer>\n"
 		  "</div>\n"
