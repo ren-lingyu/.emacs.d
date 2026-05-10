@@ -163,8 +163,7 @@
         (list (expand-file-name "./literature/" org-roam-directory))
         citar-library-paths nil)
   (setq citar-bibliography
-        (list (expand-file-name "./texmf/bibtex/bib/ref.bib" org-directory)
-              (expand-file-name "./texmf/bibtex/bib/zotero-my-library.bib" org-directory))))
+        (list (expand-file-name "./texmf/bibtex/bib/org-citar.bib" org-directory))))
 
 (mapc #'require '(org org-roam org-roam-organize org-gtd consult consult-org-roam auctex vertico orderless marginalia))
 
