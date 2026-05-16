@@ -154,8 +154,19 @@
 
 ;; 语法高亮增强
 (use-package rainbow-delimiters
-  :hook 
+  :hook
   (prog-mode . rainbow-delimiters-mode))
+
+(use-package highlight-parentheses
+  :hook
+  (prog-mode . rainbow-delimiters-mode)
+  (minibuffer-setup-hook . highlight-parentheses-minibuffer-setup))
+
+(use-package hl-block-mode
+  :hook (prog-mode . hl-block-mode))
+
+(use-package hl-indent-scope
+  :hook (prog-mode . hl-indent-scope-mode))
 
 ;; 搜索功能增强
 (use-package vertico
