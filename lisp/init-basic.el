@@ -39,6 +39,9 @@
                                     ((and (string-equal (frame-monitor-attribute 'name) "XWAYLAND0")
                                           (equal (cdr (cdr (frame-monitor-attribute 'geometry))) '(3072 1920)))
                                      180)
+                                    ((and (string-equal (frame-monitor-attribute 'name) "rdp-0")
+                                          (equal (cdr (cdr (frame-monitor-attribute 'geometry))) '(3072 1920)))
+                                     180)
                                     (t 'unspecified))
                       :weight 'regular
                       :width 'normal
